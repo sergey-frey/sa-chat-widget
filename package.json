@@ -4,22 +4,15 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "prepare": "panda codegen",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@base-ui/react": "^1.4.1",
     "@remixicon/react": "^4.9.0",
-    "@tailwindcss/vite": "^4.3.0",
-    "motion": "^12.38.0",
-    "preact": "^10.29.1",
-    "tailwindcss": "^4.3.0"
+    "preact": "^10.29.1"
   },
   "devDependencies": {
-    "@pandacss/dev": "^1.11.1",
-    "@pandacss/postcss": "^1.11.1",
     "@preact/preset-vite": "^2.10.5",
     "@types/node": "^24.12.3",
     "typescript": "~6.0.2",
