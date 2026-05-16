@@ -2,12 +2,13 @@ import { RiSendInsFill } from "@remixicon/react";
 import { useState } from "preact/hooks";
 import { Button } from "@/components/button";
 import { ChatInput } from "@/components/chat-input";
+import styles from "./styles/app.module.scss";
 
 export function App() {
   const [value, setValue] = useState("");
 
   return (
-    <section class={"root light"}>
+    <section class={`${styles.root} ${styles.light}`}>
       <div />
       <div />
       <ChatInput
