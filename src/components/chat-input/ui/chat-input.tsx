@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import type { HTMLAttributes, TargetedEvent } from "preact";
 import type { ReactNode } from "preact/compat";
+import styles from "../styles/chat-input.module.scss";
 
 interface IProps extends HTMLAttributes<HTMLLabelElement> {
   value: string;
@@ -30,15 +31,15 @@ export const ChatInput = ({
   return (
     <label
       class={clsx(
-        "chat-input__wrapper",
-        { "has-start-content": hasStartContent },
-        { "has-end-content": hasEndContent },
+        styles["chat-input__wrapper"],
+        { [styles["has-start-content"]]: hasStartContent },
+        { [styles["has-end-content"]]: hasEndContent },
         className,
       )}
       {...props}
     >
       {startContent}
-      <input class={"chat-input"} value={value} onChange={handleValueChange} />
+      <input class={styles["chat-input"]} value={value} onChange={handleValueChange} />
       {endContent}
     </label>
   );
