@@ -29,14 +29,14 @@
   }
 }
 
-/* ── Variants ─────────────────────────────────────────────── */
+/* -- Variants ------------------------------------------------ */
 
 .solid {
   background-color: var(--primary);
   color: #fff;
 
   &:hover:not(:disabled) {
-    background-color: var(--primary-700);
+    background-color: var(--primary-emphasis);
   }
   &:active:not(:disabled) {
     background-color: var(--primary-800);
@@ -45,43 +45,43 @@
 
 .ghost {
   background-color: transparent;
-  color: var(--primary-700);
+  color: var(--primary-emphasis);
 
   &:hover:not(:disabled) {
-    background-color: var(--primary-100);
+    background-color: var(--primary-subtle);
   }
   &:active:not(:disabled) {
-    background-color: var(--primary-200);
+    background-color: var(--primary-subtle-hover);
   }
 }
 
 .outlined {
   background-color: transparent;
-  color: var(--primary-700);
+  color: var(--primary-emphasis);
   border-color: var(--primary-400);
 
   &:hover:not(:disabled) {
-    background-color: var(--primary-100);
-    border-color: var(--primary-600);
+    background-color: var(--primary-subtle);
+    border-color: var(--primary);
   }
   &:active:not(:disabled) {
-    background-color: var(--primary-200);
+    background-color: var(--primary-subtle-hover);
   }
 }
 
 .soft {
-  background-color: var(--primary-100);
-  color: var(--primary-800);
+  background-color: var(--primary-subtle);
+  color: var(--primary-emphasis);
 
   &:hover:not(:disabled) {
-    background-color: var(--primary-200);
+    background-color: var(--primary-subtle-hover);
   }
   &:active:not(:disabled) {
     background-color: var(--primary-300);
   }
 }
 
-/* ── Sizes ────────────────────────────────────────────────── */
+/* -- Sizes --------------------------------------------------- */
 
 .sm {
   padding: calc(var(--sp) * 1) calc(var(--sp) * 3);
@@ -100,7 +100,7 @@
   border-radius: calc(var(--sp) * 4);
 }
 
-/* ── Loading ──────────────────────────────────────────────── */
+/* -- Loading ------------------------------------------------- */
 
 .loading {
   cursor: wait;
@@ -123,7 +123,7 @@
   }
 }
 
-/* ── Icon-only ────────────────────────────────────────────── */
+/* -- Icon-only ----------------------------------------------- */
 
 .iconOnly.sm {
   width: calc(var(--sp) * 7);

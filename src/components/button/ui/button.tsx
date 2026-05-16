@@ -41,6 +41,8 @@ export const Button = ({
   children,
   ...props
 }: IButtonProps) => {
+  const needToHideChildren = isIconOnly && isLoading;
+
   return (
     <button
       type="button"
@@ -49,7 +51,7 @@ export const Button = ({
       {...props}
     >
       {isLoading && <span class={styles.spinner} aria-hidden="true" />}
-      {children}
+      {!needToHideChildren && children}
     </button>
   );
 };

@@ -3,8 +3,12 @@
   outline: none;
   border: none;
 
-  color: var(--neutral-600);
+  color: var(--fg);
   letter-spacing: 0.6px;
+
+  &::placeholder {
+    color: var(--muted);
+  }
 }
 
 .chat-input__wrapper {
@@ -15,9 +19,9 @@
   align-items: center;
   gap: calc(var(--sp) * 1);
 
-  background-color: var(--neutral-200);
+  background-color: var(--surface);
 
-  border-color: var(--neutral-300);
+  border-color: var(--border);
   border-style: solid;
   border-width: 1px;
   border-radius: calc(var(--sp) * 3);
@@ -25,6 +29,10 @@
   padding: calc(var(--sp) * 1) calc(var(--sp) * 3);
 
   cursor: text;
+
+  &:focus-within {
+    border-color: var(--border-strong);
+  }
 
   &.has-start-content {
     grid-template-columns: auto 1fr;
@@ -37,6 +45,6 @@
   }
 
   &.has-start-content.has-end-content {
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: auto 1fr auto;
   }
 }
