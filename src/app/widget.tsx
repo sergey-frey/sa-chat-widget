@@ -1,7 +1,7 @@
 import { render } from "preact";
 import { App } from "./app.tsx";
 
-import cssRow from "./index.css?inline";
+import allCss from "@/styles";
 
 export default class SAWidget {
   private shadow: ShadowRoot;
@@ -19,7 +19,7 @@ export default class SAWidget {
     this.shadow.appendChild(this.container);
 
     const sheet = new CSSStyleSheet();
-    sheet.replaceSync(cssRow);
+    sheet.replaceSync(allCss);
     this.shadow.adoptedStyleSheets = [sheet];
 
     render(<App />, this.container);

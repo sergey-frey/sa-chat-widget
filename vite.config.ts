@@ -1,18 +1,29 @@
 import preact from "@preact/preset-vite";
 import { resolve } from "path";
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
+
+function stripCssAssets(): Plugin {
+  return {
+    name: "strip-css-assets",
+    apply: "build",
+    generateBundle(_, bundle) {
+      for (const key of Object.keys(bundle)) {
+        if (key.endsWith(".css")) delete bundle[key];
+      }
+    },
+  };
+}
 
 export default defineConfig({
-  plugins: [preact()],
+  plugins: [preact(), stripCssAssets()],
   css: {
     modules: {
-      // Shadow DOM provides scoping; plain class names keep devtools readable.
-      generateScopedName: "[local]",
+      // Use default hashed scoping for CSS Modules
     },
   },
   build: {
     lib: {
-      entry: resolve(__dirname, "src/index.ts"),
+      entry: resolve(__dirname, "src/app/index.ts"),
       name: "SAWidget",
       formats: ["iife"],
       fileName: () => "sa-widget.js",

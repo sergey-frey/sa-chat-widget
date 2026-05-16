@@ -1,6 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import type { ButtonHTMLAttributes } from "preact";
-import "../styles/button.css";
 
 const button = cva("button", {
   variants: {
