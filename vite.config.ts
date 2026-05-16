@@ -1,4 +1,3 @@
-import pandacss from "@pandacss/dev/postcss";
 import preact from "@preact/preset-vite";
 import { resolve } from "path";
 import { defineConfig } from "vite";
@@ -6,7 +5,6 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [preact()],
   css: {
-    postcss: { plugins: [pandacss] },
     modules: {
       // Shadow DOM provides scoping; plain class names keep devtools readable.
       generateScopedName: "[local]",

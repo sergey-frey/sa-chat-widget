@@ -12,15 +12,15 @@ export default class SAWidget {
     const mountPoint = options?.target ?? document.body;
     mountPoint.appendChild(hostEl);
 
-    const style = document.createElement("style");
-    style.textContent = cssRow;
-
     this.shadow = hostEl.attachShadow({ mode: "open" });
 
     this.container = document.createElement("div");
     this.container.id = "app";
-    this.shadow.appendChild(style);
     this.shadow.appendChild(this.container);
+
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(cssRow);
+    this.shadow.adoptedStyleSheets = [sheet];
 
     render(<App />, this.container);
   }
