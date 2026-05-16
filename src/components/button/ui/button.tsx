@@ -1,24 +1,25 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import type { ButtonHTMLAttributes } from "preact";
+import styles from "../styles/button.module.scss";
 
-const button = cva("button", {
+const button = cva(styles.button, {
   variants: {
     variant: {
-      solid: "solid",
-      ghost: "ghost",
-      outlined: "outlined",
-      soft: "soft",
+      solid: styles.solid,
+      ghost: styles.ghost,
+      outlined: styles.outlined,
+      soft: styles.soft,
     },
     size: {
-      sm: "sm",
-      md: "md",
-      lg: "lg",
+      sm: styles.sm,
+      md: styles.md,
+      lg: styles.lg,
     },
     isIconOnly: {
-      true: "iconOnly",
+      true: styles.iconOnly,
     },
     isLoading: {
-      true: "loading",
+      true: styles.loading,
     },
   },
   defaultVariants: {
@@ -47,7 +48,7 @@ export const Button = ({
       disabled={!!isLoading}
       {...props}
     >
-      {isLoading && <span class="spinner" aria-hidden="true" />}
+      {isLoading && <span class={styles.spinner} aria-hidden="true" />}
       {children}
     </button>
   );
