@@ -27,6 +27,7 @@ export const ChatMessagesList = ({
           key={message.id}
           authorRole={message.role}
           content={message.content}
+          createdAt={message.created_at}
         />
       ))}
       <div ref={bottomRef} />
