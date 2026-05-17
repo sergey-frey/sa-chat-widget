@@ -10,7 +10,7 @@ export const MessageSchema = v.object({
   user_chat_id: v.string(),
   role: RolesEnumSchema,
   content: v.string(),
-  created_at: v.pipe(v.string(), v.isoDateTime()),
+  created_at: v.pipe(v.string(), v.regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,6})?Z$/)),
 });
 
 export type IMessage = v.InferInput<typeof MessageSchema>;
