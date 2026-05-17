@@ -1,31 +1,22 @@
 import * as v from "valibot";
 import { apiInstance } from "@/shared/api";
 import {
-  CreateChatResponseSchema,
   GetMessagesResponseSchema,
-  type ICreateChatPayload,
-  type ICreateChatResponse,
+  SendMessageResponseSchema,
   type IGetMessagesPayload,
   type IGetMessagesResponse,
   type ISendMessagePayload,
   type ISendMessageResponse,
-  SendMessageResponseSchema,
 } from "./schemas";
 
-export const chatsService = {
-  async createChat(payload: ICreateChatPayload): Promise<ICreateChatResponse> {
-    const response = await apiInstance
-      .post(`products/${payload.productId}/chats`)
-      .json();
-
-    return v.parse(CreateChatResponseSchema, response);
-  },
-
+export const messagesService = {
   async getMessages(
     payload: IGetMessagesPayload,
   ): Promise<IGetMessagesResponse> {
     const response = await apiInstance
-      .get(`chats/${payload.chatId}/messages`)
+      .get(`products/${payload.productId}/messages`, {
+        searchParams: { user_chat_id: payload.userChatId },
+      })
       .json();
 
     return v.parse(GetMessagesResponseSchema, response);
@@ -35,8 +26,9 @@ export const chatsService = {
     payload: ISendMessagePayload,
   ): Promise<ISendMessageResponse> {
     const response = await apiInstance
-      .post(`chats/${payload.chatId}/messages`, {
+      .post(`products/${payload.productId}/messages`, {
         json: {
+          user_chat_id: payload.userChatId,
           content: payload.content,
         },
       })

@@ -1,8 +1,8 @@
 import { RiMoonLine, RiSendInsFill, RiSunLine } from "@remixicon/react";
 import clsx from "clsx";
-import { useEffect, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 import { ChatInput } from "@/components/chat-input";
-import { useCreateChat } from "@/entites/chats";
+import { useGetMessages } from "@/entites/messages";
 import { AppDataProvider } from "@/shared/lib/app-data-provider";
 import { Button } from "@/shared/ui/button";
 import styles from "./styles/app.module.scss";
@@ -11,32 +11,19 @@ type Theme = "light" | "dark";
 
 interface IProps {
   productId: number;
-  chatId: string;
-  isNewChat: boolean;
+  userChatId: string;
 }
 
-export function App({ productId, chatId, isNewChat }: IProps) {
+export function App({ productId, userChatId }: IProps) {
   const [value, setValue] = useState("");
   const [theme, setTheme] = useState<Theme>("light");
 
   const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
 
-  const { mutate } = useCreateChat();
-
-  useEffect(() => {
-    if (!isNewChat) {
-      return;
-    }
-
-    mutate({ productId });
-  }, []);
+  const { data } = useGetMessages({ productId, userChatId });
 
   return (
-    <AppDataProvider
-      productId={productId}
-      chatId={chatId}
-      isNewChat={isNewChat}
-    >
+    <AppDataProvider productId={productId} userChatId={userChatId}>
       <section class={clsx(styles.root, styles[theme])}>
         <header class={styles.header}>
           <span class={styles.title}>Sales Assistant</span>

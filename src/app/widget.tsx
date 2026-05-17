@@ -24,13 +24,17 @@ export default class SAWidget {
     sheet.replaceSync(allCss);
     this.shadow.adoptedStyleSheets = [sheet];
 
-    const currentChatId = localStorage.getItem(CHAT_ID_KEY);
+    let chatId = localStorage.getItem(CHAT_ID_KEY);
 
-    if (!currentChatId) {
-      localStorage.setItem(CHAT_ID_KEY, nanoid());
+    if (!chatId) {
+      chatId = nanoid();
+      localStorage.setItem(CHAT_ID_KEY, chatId);
     }
 
-    render(<App productId={options.productId} />, this.container);
+    render(
+      <App productId={options.productId} userChatId={chatId} />,
+      this.container,
+    );
   }
 
   destroy() {

@@ -6,7 +6,8 @@ export type IRole = v.InferInput<typeof RolesEnumSchema>;
 
 export const MessageSchema = v.object({
   id: v.number(),
-  chat_id: v.number(),
+  product_id: v.number(),
+  user_chat_id: v.string(),
   role: RolesEnumSchema,
   content: v.string(),
   created_at: v.pipe(v.string(), v.isoDateTime()),

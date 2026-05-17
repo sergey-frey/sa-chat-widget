@@ -4,8 +4,7 @@ import { useContext } from "preact/hooks";
 
 interface AppData {
   productId: number;
-  chatId: string;
-  isNewChat: boolean;
+  userChatId: string;
 }
 
 const AppDataContext = createContext<AppData | null>(null);
@@ -14,14 +13,9 @@ interface IProps extends AppData {
   children: ComponentChildren;
 }
 
-export function AppDataProvider({
-  productId,
-  chatId,
-  isNewChat,
-  children,
-}: IProps) {
+export function AppDataProvider({ productId, userChatId, children }: IProps) {
   return (
-    <AppDataContext.Provider value={{ productId, chatId, isNewChat }}>
+    <AppDataContext.Provider value={{ productId, userChatId }}>
       {children}
     </AppDataContext.Provider>
   );
