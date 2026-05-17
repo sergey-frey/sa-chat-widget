@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid";
 import { render } from "preact";
 import { CHAT_ID_KEY } from "@/shared/constants/index.ts";
+import { ErrorBoundary } from "@/shared/ui/error-boundary";
 import allCss from "@/styles";
 import { App } from "./app.tsx";
 
@@ -32,7 +33,9 @@ export default class SAWidget {
     }
 
     render(
-      <App productId={options.productId} userChatId={chatId} />,
+      <ErrorBoundary>
+        <App productId={options.productId} userChatId={chatId} />
+      </ErrorBoundary>,
       this.container,
     );
   }

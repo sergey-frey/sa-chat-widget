@@ -2,24 +2,35 @@ import * as v from "valibot";
 import { apiInstance } from "@/shared/api";
 import {
   GetMessagesResponseSchema,
-  SendMessageResponseSchema,
   type IGetMessagesPayload,
   type IGetMessagesResponse,
   type ISendMessagePayload,
   type ISendMessageResponse,
+  SendMessageResponseSchema,
 } from "./schemas";
+
+function throwParseError(
+  issues: readonly [v.BaseIssue<unknown>, ...v.BaseIssue<unknown>[]],
+): never {
+  const flat = v.flatten(issues);
+  throw new Error(`Schema validation failed: ${JSON.stringify(flat, null, 2)}`);
+}
 
 export const messagesService = {
   async getMessages(
     payload: IGetMessagesPayload,
   ): Promise<IGetMessagesResponse> {
     const response = await apiInstance
-      .get(`products/${payload.productId}/messages`, {
+      .get<IGetMessagesResponse>(`products/${payload.productId}/messages`, {
         searchParams: { user_chat_id: payload.userChatId },
       })
       .json();
 
-    return v.parse(GetMessagesResponseSchema, response);
+    const result = await v.safeParseAsync(GetMessagesResponseSchema, response);
+
+    if (!result.success) throwParseError(result.issues);
+
+    return result.output;
   },
 
   async sendMessage(
@@ -34,6 +45,10 @@ export const messagesService = {
       })
       .json();
 
-    return v.parse(SendMessageResponseSchema, response);
+    const result = await v.safeParseAsync(SendMessageResponseSchema, response);
+
+    if (!result.success) throwParseError(result.issues);
+
+    return result.output;
   },
 };

@@ -6,8 +6,13 @@ interface UseMutationState<T> {
   error: Error | null;
 }
 
+interface UseMutationOptions {
+  throwOnError?: boolean;
+}
+
 export function useMutation<T, D = void>(
   mutationFn: (data: D) => Promise<T>,
+  { throwOnError = true }: UseMutationOptions = {},
 ): UseMutationState<T> & { mutate: (data: D) => Promise<T> } {
   const [state, setState] = useState<UseMutationState<T>>({
     data: null,
@@ -30,6 +35,8 @@ export function useMutation<T, D = void>(
     },
     [mutationFn],
   );
+
+  if (throwOnError && state.error) throw state.error;
 
   return { ...state, mutate };
 }

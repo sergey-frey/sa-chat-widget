@@ -8,12 +8,13 @@ interface UseQueryState<T> {
 
 interface UseQueryOptions {
   enabled?: boolean;
+  throwOnError?: boolean;
 }
 
 export function useQuery<T>(
   fetcher: () => Promise<T>,
   deps: unknown[],
-  { enabled = true }: UseQueryOptions = {},
+  { enabled = true, throwOnError = true }: UseQueryOptions = {},
 ): UseQueryState<T> {
   const [state, setState] = useState<UseQueryState<T>>({
     data: null,
@@ -50,6 +51,8 @@ export function useQuery<T>(
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...deps, enabled]);
+
+  if (throwOnError && state.error) throw state.error;
 
   return state;
 }

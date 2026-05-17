@@ -2,8 +2,10 @@ import { RiMoonLine, RiSendInsFill, RiSunLine } from "@remixicon/react";
 import clsx from "clsx";
 import { useState } from "preact/hooks";
 import { ChatInput } from "@/components/chat-input";
+import { ChatMessagesList } from "@/components/chat-messages-list";
 import { useGetMessages } from "@/entites/messages";
 import { AppDataProvider } from "@/shared/lib/app-data-provider";
+import { ErrorBoundary } from "@/shared/ui/error-boundary";
 import { Button } from "@/shared/ui/button";
 import styles from "./styles/app.module.scss";
 
@@ -22,7 +24,10 @@ export function App({ productId, userChatId }: IProps) {
 
   const { data } = useGetMessages({ productId, userChatId });
 
+  console.log(data);
+
   return (
+    <ErrorBoundary>
     <AppDataProvider productId={productId} userChatId={userChatId}>
       <section class={clsx(styles.root, styles[theme])}>
         <header class={styles.header}>
@@ -42,7 +47,7 @@ export function App({ productId, userChatId }: IProps) {
           </Button>
         </header>
 
-        <div />
+        <ChatMessagesList messages={data ?? []} />
 
         <footer class={styles.footer}>
           <ChatInput
@@ -57,5 +62,6 @@ export function App({ productId, userChatId }: IProps) {
         </footer>
       </section>
     </AppDataProvider>
+    </ErrorBoundary>
   );
 }
