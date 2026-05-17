@@ -1,12 +1,13 @@
-import { RiMoonLine, RiSendInsFill, RiSunLine } from "@remixicon/react";
+import { RiMoonLine, RiSunLine } from "@remixicon/react";
 import clsx from "clsx";
-import { useState } from "preact/hooks";
-import { ChatInput } from "@/components/chat-input";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { ChatMessagesList } from "@/components/chat-messages-list";
-import { useGetMessages } from "@/entites/messages";
+import { MessageInput } from "@/components/message-input";
+import { useGetMessages, useSendMessage } from "@/entites/messages";
 import { AppDataProvider } from "@/shared/lib/app-data-provider";
 import { ErrorBoundary } from "@/shared/ui/error-boundary";
 import { Button } from "@/shared/ui/button";
+import type { IMessage } from "@/shared/schemas/message";
 import styles from "./styles/app.module.scss";
 
 type Theme = "light" | "dark";
@@ -17,14 +18,45 @@ interface IProps {
 }
 
 export function App({ productId, userChatId }: IProps) {
-  const [value, setValue] = useState("");
   const [theme, setTheme] = useState<Theme>("light");
+  const [messages, setMessages] = useState<IMessage[]>([]);
+  const initialized = useRef(false);
 
   const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
 
   const { data } = useGetMessages({ productId, userChatId });
+  const { mutate, loading } = useSendMessage();
 
-  console.log(data);
+  useEffect(() => {
+    if (data && !initialized.current) {
+      initialized.current = true;
+      setMessages(data);
+    }
+  }, [data]);
+
+  const handleSend = async (content: string) => {
+    const optimisticId = -Date.now();
+    const optimisticMsg: IMessage = {
+      id: optimisticId,
+      product_id: productId,
+      user_chat_id: userChatId,
+      role: "user",
+      content,
+      created_at: new Date().toISOString(),
+    };
+
+    setMessages((prev) => [...prev, optimisticMsg]);
+
+    try {
+      const response = await mutate({ productId, userChatId, content });
+      setMessages((prev) => [
+        ...prev.filter((m) => m.id !== optimisticId),
+        ...response,
+      ]);
+    } catch {
+      setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
+    }
+  };
 
   return (
     <ErrorBoundary>
@@ -47,18 +79,10 @@ export function App({ productId, userChatId }: IProps) {
           </Button>
         </header>
 
-        <ChatMessagesList messages={data ?? []} />
+        <ChatMessagesList messages={messages} />
 
         <footer class={styles.footer}>
-          <ChatInput
-            value={value}
-            onValueChange={setValue}
-            endContent={
-              <Button variant="ghost" isIconOnly size="sm">
-                <RiSendInsFill style={{ width: "1rem", height: "1rem" }} />
-              </Button>
-            }
-          />
+          <MessageInput onSend={handleSend} disabled={loading} />
         </footer>
       </section>
     </AppDataProvider>

@@ -1,0 +1,8 @@
+.chat-messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--sp) * 3);
+
+  padding: calc(var(--sp) * 3);
+  overflow-y: auto;
+}
