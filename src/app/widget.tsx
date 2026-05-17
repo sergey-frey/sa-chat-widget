@@ -1,15 +1,17 @@
+import { nanoid } from "nanoid";
 import { render } from "preact";
-import { App } from "./app.tsx";
-
+import { CHAT_ID_KEY } from "@/shared/constants/index.ts";
 import allCss from "@/styles";
+import { App } from "./app.tsx";
 
 export default class SAWidget {
   private shadow: ShadowRoot;
   private container: HTMLElement;
 
-  constructor(options?: { target?: HTMLElement }) {
+  constructor(options: { productId: number; target?: HTMLElement }) {
     const hostEl = document.createElement("div");
     const mountPoint = options?.target ?? document.body;
+
     mountPoint.appendChild(hostEl);
 
     this.shadow = hostEl.attachShadow({ mode: "open" });
@@ -22,7 +24,13 @@ export default class SAWidget {
     sheet.replaceSync(allCss);
     this.shadow.adoptedStyleSheets = [sheet];
 
-    render(<App />, this.container);
+    const currentChatId = localStorage.getItem(CHAT_ID_KEY);
+
+    if (!currentChatId) {
+      localStorage.setItem(CHAT_ID_KEY, nanoid());
+    }
+
+    render(<App productId={options.productId} />, this.container);
   }
 
   destroy() {

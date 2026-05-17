@@ -1,3 +1,3 @@
 import SAWidget from "./widget";
 
-new SAWidget();
+new SAWidget({ productId: 3 });

@@ -13,7 +13,10 @@
     "@remixicon/react": "^4.9.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "preact": "^10.29.1"
+    "ky": "^2.0.2",
+    "nanoid": "^5.1.11",
+    "preact": "^10.29.1",
+    "valibot": "^1.4.0"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.5",
