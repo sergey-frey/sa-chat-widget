@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import { format } from "date-fns";
 import type { HTMLAttributes } from "preact";
 import type { IRole } from "@/shared/schemas/message";
 import styles from "../styles/chat-message.module.scss";
@@ -18,8 +17,6 @@ export const ChatMessage = ({
   class: className,
   ...props
 }: IProps) => {
-  const formattedDate = format(new Date(createdAt), "dd.MM.yyyy HH:mm");
-
   return (
     <div
       class={clsx(

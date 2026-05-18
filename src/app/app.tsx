@@ -79,7 +79,7 @@ export function App({ productId, userChatId }: IProps) {
           </Button>
         </header>
 
-        <ChatMessagesList messages={messages} />
+        <ChatMessagesList messages={messages} isPending={loading} />
 
         <footer class={styles.footer}>
           <MessageInput onSend={handleSend} disabled={loading} />
