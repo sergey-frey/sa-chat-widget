@@ -3,9 +3,10 @@ import type { HTMLAttributes, TargetedEvent } from "preact";
 import type { ReactNode } from "preact/compat";
 import styles from "../styles/chat-input.module.scss";
 
-interface IProps extends HTMLAttributes<HTMLLabelElement> {
+interface IProps extends Omit<HTMLAttributes<HTMLLabelElement>, "onKeyDown"> {
   value: string;
   onValueChange: (value: string) => void;
+  onKeyDown?: (e: KeyboardEvent) => void;
 
   startContent?: ReactNode;
   endContent?: ReactNode;
@@ -14,15 +15,16 @@ interface IProps extends HTMLAttributes<HTMLLabelElement> {
 export const ChatInput = ({
   value,
   onValueChange,
+  onKeyDown,
   class: className,
   startContent,
   endContent,
   ...props
 }: IProps) => {
-  const handleValueChange = (e: TargetedEvent<HTMLInputElement, Event>) => {
-    const value = (e.target as HTMLInputElement).value;
+  const rows = value.split("\n").length;
 
-    onValueChange(value);
+  const handleValueChange = (e: TargetedEvent<HTMLTextAreaElement, Event>) => {
+    onValueChange((e.target as HTMLTextAreaElement).value);
   };
 
   const hasStartContent = startContent !== undefined;
@@ -34,12 +36,19 @@ export const ChatInput = ({
         styles["chat-input__wrapper"],
         { [styles["has-start-content"]]: hasStartContent },
         { [styles["has-end-content"]]: hasEndContent },
+        { [styles["multi-rows"]]: rows > 1 },
         className,
       )}
       {...props}
     >
       {startContent}
-      <input class={styles["chat-input"]} value={value} onChange={handleValueChange} />
+      <textarea
+        class={styles["chat-input"]}
+        value={value}
+        rows={rows}
+        onInput={handleValueChange}
+        onKeyDown={onKeyDown}
+      />
       {endContent}
     </label>
   );
