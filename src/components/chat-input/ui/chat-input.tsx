@@ -10,6 +10,8 @@ interface IProps extends Omit<HTMLAttributes<HTMLLabelElement>, "onKeyDown"> {
 
   startContent?: ReactNode;
   endContent?: ReactNode;
+
+  maxRows?: number;
 }
 
 export const ChatInput = ({
@@ -19,9 +21,10 @@ export const ChatInput = ({
   class: className,
   startContent,
   endContent,
+  maxRows = 7,
   ...props
 }: IProps) => {
-  const rows = value.split("\n").length;
+  const rows = Math.min(value.split("\n").length, maxRows);
 
   const handleValueChange = (e: TargetedEvent<HTMLTextAreaElement, Event>) => {
     onValueChange((e.target as HTMLTextAreaElement).value);
