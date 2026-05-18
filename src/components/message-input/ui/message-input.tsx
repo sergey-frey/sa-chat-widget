@@ -1,7 +1,9 @@
 import { RiSendInsFill } from "@remixicon/react";
-import { useState } from "preact/hooks";
+import clsx from "clsx";
+import { useRef, useState } from "preact/hooks";
 import { ChatInput } from "@/components/chat-input";
 import { Button } from "@/shared/ui/button";
+import styles from "../styles/message-input.module.scss";
 
 interface IProps {
   onSend: (content: string) => void;
@@ -10,6 +12,8 @@ interface IProps {
 
 export function MessageInput({ onSend, disabled }: IProps) {
   const [value, setValue] = useState("");
+  const [focused, setFocused] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const handleSend = () => {
     const trimmed = value.trim();
@@ -26,22 +30,38 @@ export function MessageInput({ onSend, disabled }: IProps) {
     }
   };
 
+  const handleBlur = (e: FocusEvent) => {
+    if (!wrapperRef.current?.contains(e.relatedTarget as Node)) {
+      setFocused(false);
+    }
+  };
+
   return (
-    <ChatInput
-      value={value}
-      onValueChange={setValue}
-      onKeyDown={handleKeyDown}
-      endContent={
-        <Button
-          variant="ghost"
-          isIconOnly
-          size="sm"
-          onClick={handleSend}
-          disabled={!value.trim() || disabled}
-        >
-          <RiSendInsFill style={{ width: "1rem", height: "1rem" }} />
-        </Button>
-      }
-    />
+    <div
+      ref={wrapperRef}
+      class={styles.root}
+      onFocus={() => setFocused(true)}
+      onBlur={handleBlur}
+    >
+      <ChatInput
+        value={value}
+        onValueChange={setValue}
+        onKeyDown={handleKeyDown}
+        endContent={
+          <Button
+            variant="ghost"
+            isIconOnly
+            size="sm"
+            onClick={handleSend}
+            disabled={!value.trim() || disabled}
+          >
+            <RiSendInsFill style={{ width: "1rem", height: "1rem" }} />
+          </Button>
+        }
+      />
+      <p class={clsx(styles.hint, { [styles.hintVisible]: focused })}>
+        <kbd>Shift</kbd> + <kbd>Enter</kbd> — новая строка
+      </p>
+    </div>
   );
 }

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import { ChatMessagesList } from "@/components/chat-messages-list";
 import { MessageInput } from "@/components/message-input";
 import { useGetMessages, useSendMessage } from "@/entites/messages";
+import { useGetProduct } from "@/entites/products";
 import { AppDataProvider } from "@/shared/lib/app-data-provider";
 import { ErrorBoundary } from "@/shared/ui/error-boundary";
 import { Button } from "@/shared/ui/button";
@@ -24,6 +25,7 @@ export function App({ productId, userChatId }: IProps) {
 
   const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
 
+  const { data: product, loading: productLoading } = useGetProduct({ productId });
   const { data } = useGetMessages({ productId, userChatId });
   const { mutate, loading } = useSendMessage();
 
@@ -63,7 +65,11 @@ export function App({ productId, userChatId }: IProps) {
     <AppDataProvider productId={productId} userChatId={userChatId}>
       <section class={clsx(styles.root, styles[theme])}>
         <header class={styles.header}>
-          <span class={styles.title}>Sales Assistant</span>
+          {productLoading ? (
+            <span class={styles.titleSkeleton} />
+          ) : (
+            <span class={styles.title}>{product?.assistant_name ?? "Sales Assistant"}</span>
+          )}
           <Button
             variant="ghost"
             isIconOnly

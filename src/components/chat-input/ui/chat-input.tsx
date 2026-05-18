@@ -51,6 +51,7 @@ export const ChatInput = ({
         rows={rows}
         onInput={handleValueChange}
         onKeyDown={onKeyDown}
+        placeholder={"Enter your question..."}
       />
       {endContent}
     </label>
