@@ -18,6 +18,7 @@
     "ky": "^2.0.2",
     "nanoid": "^5.1.11",
     "preact": "^10.29.1",
+    "react-markdown": "^10.1.0",
     "valibot": "^1.4.0"
   },
   "devDependencies": {

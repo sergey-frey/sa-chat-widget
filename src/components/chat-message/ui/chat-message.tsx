@@ -1,5 +1,7 @@
 import clsx from "clsx";
 import type { HTMLAttributes } from "preact";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import type { IRole } from "@/shared/schemas/message";
 import styles from "../styles/chat-message.module.scss";
 import { ChatMessageRow } from "./chat-message-row";
@@ -27,7 +29,9 @@ export const ChatMessage = ({
       {...props}
     >
       <ChatMessageRow>
-        <div class={styles["chat-message__bubble"]}>{content}</div>
+        <div class={styles["chat-message__bubble"]}>
+          <Markdown skipHtml>{content}</Markdown>
+        </div>
         {/*<span class={styles["chat-message__time"]}>{formattedDate}</span>*/}
       </ChatMessageRow>
     </div>
