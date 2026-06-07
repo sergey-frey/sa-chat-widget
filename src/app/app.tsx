@@ -33,7 +33,6 @@ export function App({ productId, userChatId }: IProps) {
   const [chatOpen, setChatOpen] = useState(false);
   const [leadCollected, setLeadCollected] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
-  const autoOpenedForMsgId = useRef<number | null>(null);
   const [portalContainer, setPortalContainer] = useState<HTMLDivElement | null>(null);
   const initialized = useRef(false);
   const isMobile = useMediaQuery("(max-width: 640px)");
@@ -54,22 +53,8 @@ export function App({ productId, userChatId }: IProps) {
     }
   }, [data]);
 
-  const lastAssistant = [...messages]
-    .reverse()
-    .find((m) => m.role === "assistant");
-
-  useEffect(() => {
-    if (
-      lastAssistant?.should_request_contact &&
-      !leadCollected &&
-      autoOpenedForMsgId.current !== lastAssistant.id
-    ) {
-      autoOpenedForMsgId.current = lastAssistant.id;
-      setFormOpen(true);
-    }
-  }, [lastAssistant, leadCollected]);
-
   const handleSend = async (content: string) => {
+    setFormOpen(false);
     const optimisticId = -Date.now();
     const optimisticMsg: IMessage = {
       id: optimisticId,
@@ -109,31 +94,36 @@ export function App({ productId, userChatId }: IProps) {
           aria-label="Toggle theme"
         >
           {theme === "light" ? (
-            <RiMoonLine style={{ width: "1rem", height: "1rem" }} />
+            <RiMoonLine style={{ width: "1rem", height: "1rem", minWidth: "1rem" }} />
           ) : (
-            <RiSunLine style={{ width: "1rem", height: "1rem" }} />
+            <RiSunLine style={{ width: "1rem", height: "1rem", minWidth: "1rem" }} />
           )}
         </Button>
       </header>
 
-      <ChatMessagesList messages={messages} isPending={loading} />
-
-      {!leadCollected && !loading && messages.length > 0 && (
-        formOpen ? (
-          <ContactForm
-            productId={productId}
-            userChatId={userChatId}
-            onSuccess={(newMessages) => {
-              setMessages((prev) => [...prev, ...newMessages]);
-              setLeadCollected(true);
-              setFormOpen(false);
-            }}
-            onClose={() => setFormOpen(false)}
-          />
-        ) : (
-          <OpenContactFormButton onClick={() => setFormOpen(true)} />
-        )
-      )}
+      <ChatMessagesList
+        messages={messages}
+        isPending={loading}
+        lastAssistantAppend={
+          !leadCollected && !loading && !formOpen && messages.length > 0 ? (
+            <OpenContactFormButton onClick={() => setFormOpen(true)} />
+          ) : undefined
+        }
+        appendItem={
+          !leadCollected && !loading && formOpen ? (
+            <ContactForm
+              productId={productId}
+              userChatId={userChatId}
+              onSuccess={(newMessages) => {
+                setMessages((prev) => [...prev, ...newMessages]);
+                setLeadCollected(true);
+                setFormOpen(false);
+              }}
+              onClose={() => setFormOpen(false)}
+            />
+          ) : undefined
+        }
+      />
 
       <footer class={styles.footer}>
         <MessageInput onSend={handleSend} disabled={loading} />
@@ -159,9 +149,9 @@ export function App({ productId, userChatId }: IProps) {
               aria-label={chatOpen ? "Close chat" : "Open chat"}
             >
               {chatOpen ? (
-                <RiCloseLine style={{ width: "1.5rem", height: "1.5rem" }} />
+                <RiCloseLine style={{ width: "1.5rem", height: "1.5rem", minWidth: "1.5rem" }} />
               ) : (
-                <RiMessage2Line style={{ width: "1.5rem", height: "1.5rem" }} />
+                <RiMessage2Line style={{ width: "1.5rem", height: "1.5rem", minWidth: "1.5rem" }} />
               )}
             </button>
 
@@ -182,7 +172,7 @@ export function App({ productId, userChatId }: IProps) {
               onClick={() => setDrawerOpen(true)}
               aria-label="Open chat"
             >
-              <RiMessage2Line style={{ width: "1.5rem", height: "1.5rem" }} />
+              <RiMessage2Line style={{ width: "1.5rem", height: "1.5rem", minWidth: "1.5rem" }} />
             </button>
 
             {portalContainer && (

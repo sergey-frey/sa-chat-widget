@@ -40,7 +40,7 @@ export function MessageInput({ onSend, disabled }: IProps) {
             onClick={handleSend}
             disabled={!value.trim() || disabled}
           >
-            <RiSendInsFill style={{ width: "1rem", height: "1rem" }} />
+            <RiSendInsFill style={{ width: "1rem", height: "1rem", minWidth: "1rem" }} />
           </Button>
         }
       />

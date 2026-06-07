@@ -1,29 +1,43 @@
 import { useVirtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
-import type { HTMLAttributes } from "preact";
+import type { ComponentChildren, HTMLAttributes } from "preact";
 import { useEffect, useRef } from "preact/hooks";
 import { ChatMessage, TypingIndicator } from "@/components/chat-message";
 import type { IMessage } from "@/shared/schemas/message";
 import styles from "../styles/chat-messages-list.module.scss";
 
-type ListItem = { type: "message"; message: IMessage } | { type: "typing" };
+type ListItem =
+  | { type: "message"; message: IMessage }
+  | { type: "typing" }
+  | { type: "extra"; node: ComponentChildren };
 
 interface IProps extends HTMLAttributes<HTMLDivElement> {
   messages: IMessage[];
   isPending?: boolean;
+  lastAssistantAppend?: ComponentChildren;
+  appendItem?: ComponentChildren;
 }
 
 export const ChatMessagesList = ({
   messages,
   isPending,
+  lastAssistantAppend,
+  appendItem,
   class: className,
   ...props
 }: IProps) => {
+  const lastAssistantIndex = (() => {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].role === "assistant") return i;
+    }
+    return -1;
+  })();
   const parentRef = useRef<HTMLDivElement>(null);
 
   const items: ListItem[] = [
     ...messages.map((message): ListItem => ({ type: "message", message })),
     ...(isPending ? [{ type: "typing" } satisfies ListItem] : []),
+    ...(appendItem ? [{ type: "extra", node: appendItem } satisfies ListItem] : []),
   ];
 
   const virtualizer = useVirtualizer({
@@ -40,6 +54,12 @@ export const ChatMessagesList = ({
       virtualizer.scrollToIndex(items.length - 1, { behavior: "smooth" });
     }
   }, [messages.length, isPending]);
+
+  useEffect(() => {
+    if (parentRef.current) {
+      parentRef.current.scrollTo({ top: parentRef.current.scrollHeight, behavior: "smooth" });
+    }
+  }, [!!appendItem]);
 
   const virtualItems = virtualizer.getVirtualItems();
 
@@ -74,11 +94,21 @@ export const ChatMessagesList = ({
             >
               {item.type === "typing" ? (
                 <TypingIndicator />
+              ) : item.type === "extra" ? (
+                item.node
               ) : (
                 <ChatMessage
                   authorRole={item.message.role}
                   content={item.message.content}
                   createdAt={item.message.created_at}
+                  append={
+                    lastAssistantAppend &&
+                    !isPending &&
+                    item.message.role === "assistant" &&
+                    virtualItem.index === lastAssistantIndex
+                      ? lastAssistantAppend
+                      : undefined
+                  }
                 />
               )}
             </div>

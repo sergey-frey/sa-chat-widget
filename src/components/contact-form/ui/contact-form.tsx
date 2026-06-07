@@ -56,20 +56,21 @@ export function ContactForm({
       variant="ghost"
       isIconOnly
       size="sm"
-      class={styles.close}
       onClick={onClose}
       aria-label="Закрыть форму"
       disabled={loading}
     >
-      <RiCloseLine style={{ width: "1rem", height: "1rem" }} />
+      <RiCloseLine style={{ width: "1rem", height: "1rem", minWidth: "1rem" }} />
     </Button>
   );
 
   if (!channel) {
     return (
       <div class={styles.root}>
-        {closeButton}
-        <p class={styles.prompt}>Как менеджеру удобнее связаться с вами?</p>
+        <div class={styles.header}>
+          <p class={styles.prompt}>Как менеджеру удобнее связаться с вами?</p>
+          {closeButton}
+        </div>
         <div class={styles.channels}>
           {CHANNELS.map(({ type, label, icon: Icon }) => (
             <Button
@@ -79,7 +80,7 @@ export function ContactForm({
               class={styles.channelButton}
               onClick={() => setChannel(type)}
             >
-              <Icon style={{ width: "1rem", height: "1rem", marginRight: "0.25rem" }} />
+              <Icon style={{ width: "1rem", height: "1rem", minWidth: "1rem", marginRight: "0.25rem" }} />
               {label}
             </Button>
           ))}
@@ -119,8 +120,10 @@ export function ContactForm({
 
   return (
     <form class={styles.root} onSubmit={handleSubmit}>
-      {closeButton}
-      <p class={styles.prompt}>Оставьте контакт — менеджер свяжется с вами.</p>
+      <div class={styles.header}>
+        <p class={styles.prompt}>Оставьте контакт — менеджер свяжется с вами.</p>
+        {closeButton}
+      </div>
       <div class={styles.inputRow}>
         <label class={styles.label} for="contact-form-value">
           {label}
@@ -149,7 +152,7 @@ export function ContactForm({
           }}
           disabled={loading}
         >
-          <RiArrowLeftLine style={{ width: "1rem", height: "1rem" }} />
+          <RiArrowLeftLine style={{ width: "1rem", height: "1rem", minWidth: "1rem" }} />
           Назад
         </Button>
         <Button type="submit" variant="solid" size="sm" isLoading={loading}>

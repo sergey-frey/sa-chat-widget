@@ -20,6 +20,10 @@
     }
 }
 
+.chat-message__append {
+    margin-top: calc(var(--sp) * 1);
+}
+
 .chat-message__bubble {
     padding: calc(var(--sp) * 2) calc(var(--sp) * 3);
 
