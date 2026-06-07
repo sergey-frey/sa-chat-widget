@@ -9,7 +9,11 @@ export default class SAWidget {
   private shadow: ShadowRoot;
   private container: HTMLElement;
 
-  constructor(options: { productId: number; target?: HTMLElement }) {
+  constructor(options: {
+    productId: number;
+    target?: HTMLElement;
+    align?: string;
+  }) {
     const hostEl = document.createElement("div");
     const mountPoint = options?.target ?? document.body;
 

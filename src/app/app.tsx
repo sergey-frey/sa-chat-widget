@@ -2,6 +2,7 @@ import { RiCloseLine, RiMessage2Line, RiMoonLine, RiSunLine } from "@remixicon/r
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { ChatMessagesList } from "@/components/chat-messages-list";
+import { ContactForm, OpenContactFormButton } from "@/components/contact-form";
 import { MessageInput } from "@/components/message-input";
 import { useGetMessages, useSendMessage } from "@/entites/messages";
 import { useGetProduct } from "@/entites/products";
@@ -15,6 +16,11 @@ import styles from "./styles/app.module.scss";
 
 type Theme = "light" | "dark";
 
+const CONTACT_SUBMISSION_PREFIX = "Контакт для связи";
+
+const isContactSubmissionMessage = (m: IMessage) =>
+  m.role === "user" && m.content.startsWith(CONTACT_SUBMISSION_PREFIX);
+
 interface IProps {
   productId: number;
   userChatId: string;
@@ -25,6 +31,9 @@ export function App({ productId, userChatId }: IProps) {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [leadCollected, setLeadCollected] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
+  const autoOpenedForMsgId = useRef<number | null>(null);
   const [portalContainer, setPortalContainer] = useState<HTMLDivElement | null>(null);
   const initialized = useRef(false);
   const isMobile = useMediaQuery("(max-width: 640px)");
@@ -39,8 +48,26 @@ export function App({ productId, userChatId }: IProps) {
     if (data && !initialized.current) {
       initialized.current = true;
       setMessages(data);
+      if (data.some(isContactSubmissionMessage)) {
+        setLeadCollected(true);
+      }
     }
   }, [data]);
+
+  const lastAssistant = [...messages]
+    .reverse()
+    .find((m) => m.role === "assistant");
+
+  useEffect(() => {
+    if (
+      lastAssistant?.should_request_contact &&
+      !leadCollected &&
+      autoOpenedForMsgId.current !== lastAssistant.id
+    ) {
+      autoOpenedForMsgId.current = lastAssistant.id;
+      setFormOpen(true);
+    }
+  }, [lastAssistant, leadCollected]);
 
   const handleSend = async (content: string) => {
     const optimisticId = -Date.now();
@@ -90,6 +117,23 @@ export function App({ productId, userChatId }: IProps) {
       </header>
 
       <ChatMessagesList messages={messages} isPending={loading} />
+
+      {!leadCollected && !loading && messages.length > 0 && (
+        formOpen ? (
+          <ContactForm
+            productId={productId}
+            userChatId={userChatId}
+            onSuccess={(newMessages) => {
+              setMessages((prev) => [...prev, ...newMessages]);
+              setLeadCollected(true);
+              setFormOpen(false);
+            }}
+            onClose={() => setFormOpen(false)}
+          />
+        ) : (
+          <OpenContactFormButton onClick={() => setFormOpen(true)} />
+        )
+      )}
 
       <footer class={styles.footer}>
         <MessageInput onSend={handleSend} disabled={loading} />

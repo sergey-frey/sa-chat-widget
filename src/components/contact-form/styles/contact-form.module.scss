@@ -1,0 +1,79 @@
+.root {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--sp) * 2);
+
+    padding: calc(var(--sp) * 3);
+    margin: 0 calc(var(--sp) * 3) calc(var(--sp) * 2);
+
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: calc(var(--sp) * 3);
+}
+
+.close {
+    position: absolute;
+    top: calc(var(--sp) * 1);
+    right: calc(var(--sp) * 1);
+}
+
+.openButton {
+    margin: 0 calc(var(--sp) * 3) calc(var(--sp) * 2);
+    align-self: flex-start;
+}
+
+.prompt {
+    font-size: 0.8125rem;
+    color: var(--fg);
+}
+
+.channels {
+    display: flex;
+    gap: calc(var(--sp) * 2);
+    flex-wrap: wrap;
+}
+
+.channelButton {
+    flex: 1 1 30%;
+    min-width: 80px;
+}
+
+.inputRow {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--sp) * 1);
+}
+
+.label {
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.input {
+    width: 100%;
+    padding: calc(var(--sp) * 2) calc(var(--sp) * 3);
+    font: inherit;
+    font-size: 0.875rem;
+    color: var(--fg);
+    background-color: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: calc(var(--sp) * 2);
+    outline: none;
+
+    &:focus {
+        border-color: var(--primary);
+    }
+}
+
+.error {
+    font-size: 0.75rem;
+    color: var(--secondary);
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    gap: calc(var(--sp) * 2);
+}
+

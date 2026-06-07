@@ -1,9 +1,8 @@
 import clsx from "clsx";
 import type { ComponentChildren } from "preact";
 import { createContext } from "preact";
-import { useContext, useRef } from "preact/hooks";
+import { useContext } from "preact/hooks";
 import { Dialog } from "radix-ui";
-import { useSwipeable } from "react-swipeable";
 import { useDrawerSwipeable } from "../lib/use-drawer-swipable";
 import styles from "../styles/drawer.module.scss";
 

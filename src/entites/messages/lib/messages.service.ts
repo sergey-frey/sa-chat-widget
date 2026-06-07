@@ -40,7 +40,8 @@ export const messagesService = {
       .post(`products/${payload.productId}/messages`, {
         json: {
           user_chat_id: payload.userChatId,
-          content: payload.content,
+          ...(payload.content !== undefined && { content: payload.content }),
+          ...(payload.contact !== undefined && { contact: payload.contact }),
         },
       })
       .json();
