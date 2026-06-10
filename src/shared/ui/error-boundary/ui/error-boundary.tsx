@@ -3,7 +3,7 @@ import type { ComponentChildren } from "preact";
 
 interface Props {
   children: ComponentChildren;
-  fallback?: (error: Error, reset: () => void) => ComponentChildren;
+  fallback?: (error: Error, reset: () => void) => ComponentChildren | undefined;
 }
 
 interface State {
@@ -24,7 +24,8 @@ export class ErrorBoundary extends Component<Props, State> {
 
     if (error) {
       if (this.props.fallback) {
-        return <>{this.props.fallback(error, this.reset)}</>;
+        const result = this.props.fallback(error, this.reset);
+        if (result !== undefined) return <>{result}</>;
       }
 
       return (

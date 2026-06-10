@@ -6,5 +6,6 @@ export function useGetProduct({ productId }: IGetProductPayload) {
   return useQuery(
     () => productsService.getProduct({ productId }),
     [productId],
+    { throwOnError: false },
   );
 }

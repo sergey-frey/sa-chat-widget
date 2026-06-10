@@ -6,5 +6,6 @@ export function useGetMessages({ productId, userChatId }: IGetMessagesPayload) {
   return useQuery(
     () => messagesService.getMessages({ productId, userChatId }),
     [productId, userChatId],
+    { throwOnError: false },
   );
 }

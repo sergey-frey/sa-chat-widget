@@ -11,7 +11,6 @@ import { useMediaQuery } from "@/shared/lib/use-media-query";
 import type { IMessage } from "@/shared/schemas/message";
 import { Button } from "@/shared/ui/button";
 import { DrawerContent, DrawerRoot } from "@/shared/ui/drawer";
-import { ErrorBoundary } from "@/shared/ui/error-boundary";
 import styles from "./styles/app.module.scss";
 
 type Theme = "light" | "dark";
@@ -40,7 +39,7 @@ export function App({ productId, userChatId }: IProps) {
   const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
 
   const { data: product, loading: productLoading } = useGetProduct({ productId });
-  const { data } = useGetMessages({ productId, userChatId });
+  const { data, loading: messagesLoading, error: messagesError } = useGetMessages({ productId, userChatId });
   const { mutate, loading } = useSendMessage();
 
   useEffect(() => {
@@ -77,6 +76,8 @@ export function App({ productId, userChatId }: IProps) {
       setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
     }
   };
+
+  if (messagesLoading || messagesError) return null;
 
   const chatContent = (
     <>
@@ -132,13 +133,12 @@ export function App({ productId, userChatId }: IProps) {
   );
 
   return (
-    <ErrorBoundary>
-      <AppDataProvider productId={productId} userChatId={userChatId}>
-        {/*
-          Anchor lives inside shadow DOM — portal renders here so Drawer
-          content inherits adopted stylesheets and CSS variables.
-        */}
-        <div ref={setPortalContainer} class={styles[theme]} />
+    <AppDataProvider productId={productId} userChatId={userChatId}>
+      {/*
+        Anchor lives inside shadow DOM — portal renders here so Drawer
+        content inherits adopted stylesheets and CSS variables.
+      */}
+      <div ref={setPortalContainer} class={styles[theme]} />
 
         {!isMobile && (
           <>
@@ -186,7 +186,6 @@ export function App({ productId, userChatId }: IProps) {
             )}
           </>
         )}
-      </AppDataProvider>
-    </ErrorBoundary>
+    </AppDataProvider>
   );
 }
