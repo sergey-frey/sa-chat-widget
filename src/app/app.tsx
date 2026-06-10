@@ -105,7 +105,7 @@ export function App({ productId, userChatId }: IProps) {
         messages={messages}
         isPending={loading}
         lastAssistantAppend={
-          !leadCollected && !loading && !formOpen && messages.length > 0 ? (
+          !leadCollected && !loading && !formOpen && messages.some((m) => m.should_request_contact) ? (
             <OpenContactFormButton onClick={() => setFormOpen(true)} />
           ) : undefined
         }
