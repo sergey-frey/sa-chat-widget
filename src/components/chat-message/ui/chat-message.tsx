@@ -33,9 +33,7 @@ export const ChatMessage = ({
         <div class={styles["chat-message__bubble"]}>
           <Markdown skipHtml>{content}</Markdown>
         </div>
-        {append && (
-          <div class={styles["chat-message__append"]}>{append}</div>
-        )}
+        {append && <div class={styles["chat-message__append"]}>{append}</div>}
       </ChatMessageRow>
     </div>
   );

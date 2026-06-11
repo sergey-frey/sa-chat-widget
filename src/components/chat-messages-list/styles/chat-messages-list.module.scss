@@ -2,3 +2,9 @@
   padding: calc(var(--sp) * 3);
   overflow-y: auto;
 }
+
+.chat-messages-list__inner {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--sp) * 3);
+}
