@@ -30,7 +30,8 @@ export default defineConfig({
     },
   },
   server: {
-    port: 5174,
+    host: true,
+    port: 1152,
     strictPort: true,
   },
   resolve: {
