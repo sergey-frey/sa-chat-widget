@@ -20,7 +20,7 @@ export function MessageInput({ onSend, disabled }: IProps) {
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "Enter" && e.shiftKey) {
+    if (e.key === "Enter" && (e.shiftKey || e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       handleSend();
     }
