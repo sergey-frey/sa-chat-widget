@@ -30,6 +30,9 @@ export function App({ productId, userChatId }: IProps) {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [hasUnread, setHasUnread] = useState(false);
+  const chatOpenRef = useRef(false);
+  const drawerOpenRef = useRef(false);
   const [leadCollected, setLeadCollected] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [portalContainer, setPortalContainer] = useState<HTMLDivElement | null>(null);
@@ -41,6 +44,9 @@ export function App({ productId, userChatId }: IProps) {
   const { data: product, loading: productLoading } = useGetProduct({ productId });
   const { data, loading: messagesLoading, error: messagesError } = useGetMessages({ productId, userChatId });
   const { mutate, loading } = useSendMessage();
+
+  useEffect(() => { chatOpenRef.current = chatOpen; }, [chatOpen]);
+  useEffect(() => { drawerOpenRef.current = drawerOpen; }, [drawerOpen]);
 
   useEffect(() => {
     if (data && !initialized.current) {
@@ -80,6 +86,8 @@ export function App({ productId, userChatId }: IProps) {
         ...prev.filter((m) => m.id !== optimisticId),
         ...response,
       ]);
+      const isOpen = isMobile ? drawerOpenRef.current : chatOpenRef.current;
+      if (!isOpen) setHasUnread(true);
     } catch {
       setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
     }
@@ -150,18 +158,21 @@ export function App({ productId, userChatId }: IProps) {
 
         {!isMobile && (
           <>
-            <button
-              type="button"
-              class={clsx(styles.fab, styles[theme])}
-              onClick={() => setChatOpen((o) => !o)}
-              aria-label={chatOpen ? "Close chat" : "Open chat"}
-            >
-              {chatOpen ? (
-                <RiCloseLine style={{ width: "1.5rem", height: "1.5rem", minWidth: "1.5rem" }} />
-              ) : (
-                <RiMessage2Line style={{ width: "1.5rem", height: "1.5rem", minWidth: "1.5rem" }} />
-              )}
-            </button>
+            <div class={clsx(styles.fabWrap, styles[theme])}>
+              <button
+                type="button"
+                class={clsx(styles.fab, styles[theme])}
+                onClick={() => { setChatOpen((o) => !o); setHasUnread(false); }}
+                aria-label={chatOpen ? "Close chat" : "Open chat"}
+              >
+                {chatOpen ? (
+                  <RiCloseLine style={{ width: "1.5rem", height: "1.5rem", minWidth: "1.5rem" }} />
+                ) : (
+                  <RiMessage2Line style={{ width: "1.5rem", height: "1.5rem", minWidth: "1.5rem" }} />
+                )}
+              </button>
+              {hasUnread && !chatOpen && <span class={styles.fabDot} />}
+            </div>
 
             <section
               class={clsx(styles.root, styles[theme], { [styles.rootVisible]: chatOpen })}
@@ -174,14 +185,17 @@ export function App({ productId, userChatId }: IProps) {
 
         {isMobile && (
           <>
-            <button
-              type="button"
-              class={clsx(styles.fab, styles[theme])}
-              onClick={() => setDrawerOpen(true)}
-              aria-label="Open chat"
-            >
-              <RiMessage2Line style={{ width: "1.5rem", height: "1.5rem", minWidth: "1.5rem" }} />
-            </button>
+            <div class={clsx(styles.fabWrap, styles[theme])}>
+              <button
+                type="button"
+                class={clsx(styles.fab, styles[theme])}
+                onClick={() => { setDrawerOpen(true); setHasUnread(false); }}
+                aria-label="Open chat"
+              >
+                <RiMessage2Line style={{ width: "1.5rem", height: "1.5rem", minWidth: "1.5rem" }} />
+              </button>
+              {hasUnread && <span class={styles.fabDot} />}
+            </div>
 
             {portalContainer && (
               <DrawerRoot open={drawerOpen} onOpenChange={setDrawerOpen}>

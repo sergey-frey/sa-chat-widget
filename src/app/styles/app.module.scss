@@ -184,13 +184,17 @@
     border-radius: inherit;
 }
 
-/* -- FAB button (mobile) ------------------------------------- */
+/* -- FAB wrapper + button ------------------------------------ */
 
-.fab {
+.fabWrap {
     position: fixed;
     bottom: calc(var(--sp) * 4);
     right: calc(var(--sp) * 4);
     z-index: 40;
+}
+
+.fab {
+    position: relative;
 
     display: flex;
     align-items: center;
@@ -224,6 +228,20 @@
         outline: 2px solid var(--primary-400);
         outline-offset: 2px;
     }
+}
+
+/* -- FAB unread badge ---------------------------------------- */
+
+.fabDot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: var(--secondary);
+    border: 2px solid white;
+    pointer-events: none;
 }
 
 /* -- Shared header / footer ---------------------------------- */
