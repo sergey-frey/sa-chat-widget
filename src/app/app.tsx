@@ -52,6 +52,14 @@ export function App({ productId, userChatId }: IProps) {
     }
   }, [data]);
 
+  useEffect(() => {
+    (window as any).saWidget = {
+      open: () => { setChatOpen(true); setDrawerOpen(true); },
+      close: () => { setChatOpen(false); setDrawerOpen(false); },
+    };
+    return () => { delete (window as any).saWidget; };
+  }, []);
+
   const handleSend = async (content: string) => {
     setFormOpen(false);
     const optimisticId = -Date.now();
