@@ -5,8 +5,9 @@ class SAWidgetElement extends HTMLElement {
 
   connectedCallback() {
     const productId = Number(this.getAttribute("product-id"));
+    const dev = this.getAttribute("_dev") === "true";
     // const align = this.getAttribute("align");
-    this.instance = new SAWidget({ productId, target: this });
+    this.instance = new SAWidget({ productId, dev, target: this });
   }
 
   disconnectedCallback() {

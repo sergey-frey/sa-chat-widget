@@ -1,6 +1,7 @@
 import ky, { isHTTPError } from "ky";
 
-export const BASE_API_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_API_URL = import.meta.env.VITE_API_BASE_URL;
+const DEV_API_URL = "http://localhost:8000/";
 
 export class ForbiddenError extends Error {
   constructor() {
@@ -14,23 +15,31 @@ function getPageOrigin(): string {
   return origin + pathname;
 }
 
-export const apiInstance = ky.create({
-  baseUrl: BASE_API_URL,
-  timeout: 180000,
-  hooks: {
-    beforeRequest: [
-      ({ request }) => {
-        request.headers.set("X-Page-Origin", getPageOrigin());
-      },
-    ],
-    beforeError: [
-      ({ error }) => {
-        if (isHTTPError(error) && error.response.status === 403) throw new ForbiddenError();
-        return error;
-      },
-    ],
-  },
-});
+function createApiInstance(baseUrl: string) {
+  return ky.create({
+    prefix: baseUrl,
+    timeout: 180000,
+    hooks: {
+      beforeRequest: [
+        ({ request }) => {
+          request.headers.set("X-Page-Origin", getPageOrigin());
+        },
+      ],
+      beforeError: [
+        ({ error }) => {
+          if (isHTTPError(error) && error.response.status === 403) throw new ForbiddenError();
+          return error;
+        },
+      ],
+    },
+  });
+}
+
+export let apiInstance = createApiInstance(BASE_API_URL);
+
+export function setDevMode(enabled: boolean) {
+  apiInstance = createApiInstance(enabled ? DEV_API_URL : BASE_API_URL);
+}
 
 export { useMutation } from "./use-mutation";
 export { useQuery } from "./use-query";

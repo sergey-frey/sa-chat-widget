@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 import { render } from "preact";
 import { CHAT_ID_KEY } from "@/shared/constants/index.ts";
 import allCss from "@/styles";
+import { setDevMode } from "@/shared/api";
 import { App } from "./app.tsx";
 
 export default class SAWidget {
@@ -12,6 +13,7 @@ export default class SAWidget {
     productId: number;
     target?: HTMLElement;
     align?: string;
+    dev?: boolean;
   }) {
     const hostEl = document.createElement("div");
     const mountPoint = options?.target ?? document.body;
@@ -27,6 +29,8 @@ export default class SAWidget {
     const sheet = new CSSStyleSheet();
     sheet.replaceSync(allCss);
     this.shadow.adoptedStyleSheets = [sheet];
+
+    setDevMode(options.dev ?? false);
 
     let chatId = localStorage.getItem(CHAT_ID_KEY);
 
