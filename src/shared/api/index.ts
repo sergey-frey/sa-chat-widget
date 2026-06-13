@@ -1,4 +1,4 @@
-import ky from "ky";
+import ky, { isHTTPError } from "ky";
 
 export const BASE_API_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -24,8 +24,8 @@ export const apiInstance = ky.create({
       },
     ],
     beforeError: [
-      (error) => {
-        if (error.response?.status === 403) throw new ForbiddenError();
+      ({ error }) => {
+        if (isHTTPError(error) && error.response.status === 403) throw new ForbiddenError();
         return error;
       },
     ],
